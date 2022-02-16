@@ -92,3 +92,8 @@ COUNT(last_name) AS name_count
 from employees
 group by last_name
 order by name_count DESC;
+
+
+-- epilogue - HA!
+select * from employees
+where emp_no = 499942;
