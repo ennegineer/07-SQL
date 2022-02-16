@@ -28,23 +28,67 @@ select distinct
 	e.last_name,
 	e.first_name
 from departments AS dep
-join employees AS e on ()
+join dept_manager AS dm
+on (dep.dept_no = dm.dept_no)
+join employees AS e 
+on (e.emp_no = dm.emp_no)
 where e.emp_no in (
 	select emp_no
-	from dept_manager) 
-join dept_emp AS de on (e.emp_no = de.emp_no)
--- dept_no and dept_name in departments
+	from dept_manager);
 
 -- 4. List the department of each employee with the following information:
 -- employee number, last name, first name, and department name.
+select 
+e.emp_no as employee_number,
+e.last_name,
+e.first_name,
+d.dept_name
+from employees AS e
+left join dept_emp 
+on e.emp_no = dept_emp.emp_no
+left join departments AS d
+on dept_emp.dept_no = d.dept_no;
 
--- -- 5. List first name, last name, and sex for employees whose first name is "Hercules" and last names begin with "B."
-select * from employees limit 10
-select * from dept_manager limit 10
-select * from dept_emp limit 10
-select * from departments limit 10
--- -- 6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
+-- 5. List first name, last name, and sex for employees whose first name
+--is "Hercules" and last names begin with "B."
+select first_name,
+last_name,
+sex
+from employees
+where first_name = 'Hercules' and last_name LIKE 'B%';
 
--- -- 7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
-departments.dept_name = Sales or Development
--- -- 8. In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
+-- 6. List all employees in the Sales department, including their
+--employee number, last name, first name, and department name.
+select 
+e.emp_no as employee_number,
+e.last_name,
+e.first_name,
+d.dept_name
+from employees AS e
+left join dept_emp 
+on e.emp_no = dept_emp.emp_no
+left join departments AS d
+on dept_emp.dept_no = d.dept_no
+where dept_name = 'Sales';
+
+-- 7. List all employees in the Sales and Development departments, including their
+--employee number, last name, first name, and department name.
+select 
+e.emp_no as employee_number,
+e.last_name,
+e.first_name,
+d.dept_name
+from employees AS e
+left join dept_emp 
+on e.emp_no = dept_emp.emp_no
+left join departments AS d
+on dept_emp.dept_no = d.dept_no
+where dept_name = 'Sales' or dept_name = 'Development';
+
+-- 8. In descending order, list the frequency count of employee last names,
+--i.e., how many employees share each last name.
+select last_name,
+COUNT(last_name) AS name_count
+from employees
+group by last_name
+order by name_count DESC;
